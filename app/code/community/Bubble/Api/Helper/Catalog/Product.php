@@ -152,10 +152,19 @@ class Bubble_Api_Helper_Catalog_Product extends Mage_Core_Helper_Abstract
 	    $products = Mage::getModel('catalog/product')->getCollection()
             ->addIdFilter($simpleProductIds);
 
+        Mage::log("configurables = ".print_r($configurableAttributes, true), null, 'ikom.log');
+
         if (count($products)) {
             foreach ($attributesData as &$attribute) {
                 $attribute['label'] = $attribute['frontend_label'];
                 $attributeCode = $attribute['attribute_code'];
+                $attributeId = $attribute['attribute_id'];
+                $position = array_search($attributeId, $configurableAttributes);
+                if ($position != FALSE) {
+                    $attribute['position'] = $position;
+                }
+                Mage::log("set position of ".$attributeId." to ".$position, null, 'ikom.log');
+
                 foreach ($products as $product) {
                     $product->load($product->getId());
                     $optionId = $product->getData($attributeCode);
