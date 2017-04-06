@@ -53,18 +53,15 @@ class Bubble_Api_Model_Catalog_Product_Api_V2 extends Mage_Catalog_Model_Product
         			$price = $value['pricing_value'];
         			if ($price) {
 	        			$optionId = $value['value_index'];
-        				$changes[$optionId] = '' . $price .($value['is_percent'] ? '%' :'');
+        				$changes[] = array(key => $optionId,
+        						'value' => '' . $price .($value['is_percent'] ? '%' :''));
         			}
         		}
-				$priceChanges[$attributeCode] = $changes;
+				$priceChanges[] = array('key' => $attributeCode,
+						'value' => $changes);
         	}
         }
         $result['configurable_attributes'] = $confAttrs;
-
-
-        $helper = Mage::helper('api/data');
-        $priceChanges = $helper->wsiArrayPacker($priceChanges);
-        Mage::log("price changes ". print_r($priceChanges, true), null, 'ikom.log');
 	   	$result['price_changes'] = $priceChanges;
 		return $result;
 	}
